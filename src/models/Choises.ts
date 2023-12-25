@@ -17,9 +17,3 @@ export const sortChoices: TChoice<TSortableKeys>[] = [{
     value: 'createdAt'
 }]
 
-export const getChoices: (todoList: ITodoList) => TChoice<number>[] = (todoList) =>
-    Array.from(todoList.getEntries())
-        .map(([id, todo]) => ({
-            name: todo.title,
-            value: id
-        }))

@@ -1,7 +1,10 @@
-import {TodoList} from "./TodoList";
+import {getTodoListAsChoices, TodoList} from "./TodoList";
 import {input, select} from "@inquirer/prompts";
 import {PrivateTodo, Todo} from "./Todo";
-import {getChoices, searchChoices, sortChoices} from "./Choises";
+import {searchChoices, sortChoices} from "./Choises";
+
+export type TAction = Record<keyof typeof actionTitles,() => Promise<string | boolean>>
+export type TActionKey = keyof typeof actionTitles
 
 export const actionTitles = {
     add: 'Add new todo',
@@ -16,7 +19,7 @@ export const actionTitles = {
     exit: 'Exit'
 }
 
-export function getActions(todoList: TodoList) {
+export function getActions(todoList: TodoList):TAction  {
     return {
         add: async () => {
             const TodoConstructor = await select({
@@ -42,7 +45,7 @@ export function getActions(todoList: TodoList) {
                 return `You don't have any todos to remove.`
             }
 
-            const noteId = await select({message: 'What ToDo you want to delete?', choices: getChoices(todoList)})
+            const noteId = await select({message: 'What ToDo you want to delete?', choices: getTodoListAsChoices(todoList)})
             todoList.delete(noteId)
 
             return `Todo was successfully deleted.`
@@ -52,7 +55,7 @@ export function getActions(todoList: TodoList) {
                 return `You don't have any todos to edit.`
             }
 
-            const noteId = await select({message: 'What ToDo you want to edit?', choices: getChoices(todoList)})
+            const noteId = await select({message: 'What ToDo you want to edit?', choices: getTodoListAsChoices(todoList)})
             const title = await input({message: 'Write new ToDo title', default: 'Title'})
             const content = await input({message: 'Write new ToDo content', default: 'Content'})
 
@@ -65,7 +68,7 @@ export function getActions(todoList: TodoList) {
                 return `You don't have any todos.`
             }
 
-            const noteId = await select({message: 'What ToDo you want to show?', choices: getChoices(todoList)})
+            const noteId = await select({message: 'What ToDo you want to show?', choices: getTodoListAsChoices(todoList)})
 
             return todoList.getInfo(noteId)
         },
@@ -76,7 +79,7 @@ export function getActions(todoList: TodoList) {
 
             const noteId = await select({
                 message: 'What ToDo you want to mark as complete?',
-                choices: getChoices(todoList)
+                choices: getTodoListAsChoices(todoList)
             })
             todoList.markAsComplete(noteId)
 
@@ -146,6 +149,6 @@ export function getActions(todoList: TodoList) {
 
             return true
         },
-        exit: () => process.exit()
+        exit: async () => process.exit()
     };
 }

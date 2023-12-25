@@ -4,6 +4,7 @@ import {ITodo, TSearchableKeys, TSortableKeys} from "../types/Todo";
 import {ISortable} from "../types/Sortable";
 import {Todo} from "./Todo";
 import {IStats} from "../types/Stats";
+import {TChoice} from "../types/Choise";
 
 export class TodoList implements ITodoList, ISearchable<ITodo>, ISortable<ITodo> {
     private _notes: Map<number, ITodo> = new Map()
@@ -105,6 +106,10 @@ export class TodoList implements ITodoList, ISearchable<ITodo>, ISortable<ITodo>
     }
 }
 
-export function initializeTodoList() {
-    return new TodoList();
-}
+export const initializeTodoList = () => new TodoList()
+export const getTodoListAsChoices: (todoList: ITodoList) => TChoice<number>[] = (todoList) =>
+    Array.from(todoList.getEntries())
+        .map(([id, todo]) => ({
+            name: todo.title,
+            value: id
+        }))
