@@ -17,7 +17,7 @@ async function handleUserInput(actions: TAction) {
             if (action === 'exit') {
                 continueExecution = false;
             } else {
-                const result = await actions[action as keyof typeof actions]();
+                const result = await actions[action]();
 
                 if (typeof result === 'boolean') {
                     console.log('The action was successfully executed');
