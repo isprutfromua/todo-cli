@@ -25,10 +25,6 @@ export class Todo implements ITodo {
         this._editedAt = Date.now()
     }
 
-    get done() {
-        return this._done
-    }
-
     complete() {
         this._done = true
     }
@@ -41,6 +37,10 @@ export class Todo implements ITodo {
             `Edited: ${new Date(this._editedAt).toLocaleString()}`,
             `Done: ${this.done}`
         ].join('\n')
+    }
+
+    get done(): boolean {
+        return this._done
     }
 
     get title(): string {
