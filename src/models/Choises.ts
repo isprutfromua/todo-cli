@@ -1,6 +1,5 @@
 import {TSearchableKeys, TSortableKeys} from "../types/Todo";
 import {TChoice} from "../types/Choise";
-import {ITodoList} from "../types/TodoList";
 
 export const searchChoices: TChoice<TSearchableKeys>[] = [{
     name: 'By content',
