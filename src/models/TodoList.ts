@@ -6,7 +6,7 @@ import {Todo} from "./Todo";
 import {IStats} from "../types/Stats";
 import {TChoice} from "../types/Choise";
 
-export class TodoList implements ITodoList, ISearchable<ITodo>, ISortable<ITodo> {
+export class TodoList implements ITodoList {
     private _notes: Map<number, ITodo> = new Map()
 
     get notes(): Map<number, ITodo> {
@@ -15,24 +15,16 @@ export class TodoList implements ITodoList, ISearchable<ITodo>, ISortable<ITodo>
 
     private _currentId: number = 0
 
-    get currentId(): number {
-        return this._currentId;
-    }
-
-    set currentId(value: number) {
-        this._currentId = value;
-    }
-
     get size(): number {
         return this.notes.size
     }
 
     add(todo: ITodo) {
-        const todoId = this.currentId
+        const todoId = this._currentId
 
         try {
             this.notes.set(todoId, todo)
-            this.currentId = this.currentId + 1
+            this._currentId = this._currentId + 1
 
             return true
         } catch {
@@ -87,11 +79,9 @@ export class TodoList implements ITodoList, ISearchable<ITodo>, ISortable<ITodo>
 
         return true;
     }
+}
 
-    search(key: TSearchableKeys, query: string): ITodo[] {
-        return this.getAllData().filter(note => note[key].includes(query));
-    }
-
+export class SortableTodoList extends TodoList implements ISortable<ITodo> {
     sort(key: TSortableKeys): ITodo[] {
         return this.getAllData().sort((a, b) => {
             const el1 = a[key]
@@ -106,7 +96,15 @@ export class TodoList implements ITodoList, ISearchable<ITodo>, ISortable<ITodo>
     }
 }
 
+export class SearchableTodoList extends TodoList implements ISearchable<ITodo> {
+    search(key: TSearchableKeys, query: string): ITodo[] {
+        return this.getAllData().filter(note => note[key].includes(query));
+    }
+}
+
 export const initializeTodoList = () => new TodoList()
+export const initializeSortableList = () => new SortableTodoList()
+export const initializeSearchableList = () => new SearchableTodoList()
 export const getTodoListAsChoices: (todoList: ITodoList) => TChoice<number>[] = (todoList) =>
     Array.from(todoList.getEntries())
         .map(([id, todo]) => ({

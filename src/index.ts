@@ -1,6 +1,6 @@
 import {select} from "@inquirer/prompts";
 import {actionTitles, getActions, TAction, TActionKey} from "./models/Actions";
-import {initializeTodoList} from "./models/TodoList";
+import {initializeSearchableList, initializeSortableList, initializeTodoList} from "./models/TodoList";
 
 
 async function handleUserInput(actions: TAction) {
@@ -30,7 +30,14 @@ async function handleUserInput(actions: TAction) {
 }
 
 async function init() {
-    const todoList = initializeTodoList();
+    const listInitializer = await select({
+        message: 'Which todo list you want to create?', choices: [
+            {name: 'Default', value: initializeTodoList},
+            {name: 'Sortable', value: initializeSortableList},
+            {name: 'Searchable', value: initializeSearchableList}
+        ]
+    })
+    const todoList = listInitializer();
     const actions = getActions(todoList);
 
     await handleUserInput(actions);

@@ -1,9 +1,9 @@
-import {getTodoListAsChoices, TodoList} from "./TodoList";
+import {getTodoListAsChoices, SearchableTodoList, SortableTodoList, TodoList} from "./TodoList";
 import {input, select} from "@inquirer/prompts";
 import {PrivateTodo, Todo} from "./Todo";
 import {searchChoices, sortChoices} from "./Choises";
 
-export type TAction = Record<keyof typeof actionTitles,() => Promise<string | boolean>>
+export type TAction = Record<keyof typeof actionTitles, () => Promise<string | boolean>>
 export type TActionKey = keyof typeof actionTitles
 
 export const actionTitles = {
@@ -19,7 +19,7 @@ export const actionTitles = {
     exit: 'Exit'
 }
 
-export function getActions(todoList: TodoList):TAction  {
+export function getActions(todoList: TodoList): TAction {
     return {
         add: async () => {
             const TodoConstructor = await select({
@@ -45,7 +45,10 @@ export function getActions(todoList: TodoList):TAction  {
                 return `You don't have any todos to remove.`
             }
 
-            const noteId = await select({message: 'What ToDo you want to delete?', choices: getTodoListAsChoices(todoList)})
+            const noteId = await select({
+                message: 'What ToDo you want to delete?',
+                choices: getTodoListAsChoices(todoList)
+            })
             todoList.delete(noteId)
 
             return `Todo was successfully deleted.`
@@ -55,7 +58,10 @@ export function getActions(todoList: TodoList):TAction  {
                 return `You don't have any todos to edit.`
             }
 
-            const noteId = await select({message: 'What ToDo you want to edit?', choices: getTodoListAsChoices(todoList)})
+            const noteId = await select({
+                message: 'What ToDo you want to edit?',
+                choices: getTodoListAsChoices(todoList)
+            })
             const title = await input({message: 'Write new ToDo title', default: 'Title'})
             const content = await input({message: 'Write new ToDo content', default: 'Content'})
 
@@ -68,7 +74,10 @@ export function getActions(todoList: TodoList):TAction  {
                 return `You don't have any todos.`
             }
 
-            const noteId = await select({message: 'What ToDo you want to show?', choices: getTodoListAsChoices(todoList)})
+            const noteId = await select({
+                message: 'What ToDo you want to show?',
+                choices: getTodoListAsChoices(todoList)
+            })
 
             return todoList.getInfo(noteId)
         },
@@ -86,6 +95,9 @@ export function getActions(todoList: TodoList):TAction  {
             return `Todo was successfully marked as done.`
         },
         sort: async () => {
+            if (!(todoList instanceof SortableTodoList)) {
+                return `You can't sort this list..`
+            }
             if (!todoList.size) {
                 return `You don't have any todos to sort.`
             }
@@ -102,6 +114,10 @@ export function getActions(todoList: TodoList):TAction  {
             return true
         },
         search: async () => {
+            if (!(todoList instanceof SearchableTodoList)) {
+                return `You can't search items in this list..`
+            }
+
             if (!todoList.size) {
                 return `You don't have any todos to search for.`
             }
