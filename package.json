@@ -1,0 +1,19 @@
+{
+  "name": "cli-todo",
+  "version": "1.0.0",
+  "description": "This package provides command line interface to work with todos",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [
+    "todo",
+    "cli",
+    "typescript"
+  ],
+  "author": "Ivan Sprut",
+  "license": "ISC",
+  "dependencies": {
+    "@inquirer/prompts": "^3.3.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  }
+}
