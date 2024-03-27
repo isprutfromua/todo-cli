@@ -15,67 +15,44 @@ export class Todo implements ITodo {
     }
 
     private _title: string
+    private _content: string
+    private _editedAt: number
+    private _done: boolean
+
+    async edit(newTitle: string, newContent: string) {
+        this._title = newTitle
+        this._content = newContent
+        this._editedAt = Date.now()
+    }
+
+    complete() {
+        this._done = true
+    }
+
+    toString() {
+        return [
+            `Title: ${this._title}`,
+            `Content: ${this._content}`,
+            `Created: ${new Date(this._createdAt).toLocaleString()}`,
+            `Edited: ${new Date(this._editedAt).toLocaleString()}`,
+            `Done: ${this.done}`
+        ].join('\n')
+    }
+
+    get done(): boolean {
+        return this._done
+    }
 
     get title(): string {
         return this._title;
     }
 
-    set title(value: string) {
-        this._title = value;
-    }
-
-    private _content: string
-
     get content(): string {
         return this._content;
     }
 
-    set content(value: string) {
-        this._content = value;
-    }
-
-    private _editedAt: number
-
-    get editedAt(): number {
-        return this._editedAt;
-    }
-
-    set editedAt(value: number) {
-        this._editedAt = value;
-    }
-
-    private _done: boolean
-
-    get done(): boolean {
-        return this._done;
-    }
-
-    set done(value: boolean) {
-        this._done = value;
-    }
-
     get createdAt(): number {
         return this._createdAt;
-    }
-
-    async edit(newTitle: string, newContent: string) {
-        this.title = newTitle
-        this.content = newContent
-        this.editedAt = Date.now()
-    }
-
-    complete() {
-        this.done = true
-    }
-
-    toString() {
-        return [
-            `Title: ${this.title}`,
-            `Content: ${this.content}`,
-            `Created: ${new Date(this.createdAt).toLocaleString()}`,
-            `Edited: ${new Date(this.editedAt).toLocaleString()}`,
-            `Done: ${this.done}`
-        ].join('\n')
     }
 }
 
